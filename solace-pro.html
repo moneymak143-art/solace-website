@@ -1,0 +1,1474 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Solace — Mental Wellness Reimagined</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=DM+Sans:ital,opsz,wght@0,9..40,200;0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap" rel="stylesheet"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+
+<style>
+/* ══════════════════════════════════════
+   TOKENS
+══════════════════════════════════════ */
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --jade:#1ed8b4;
+  --jade-deep:#0faa8a;
+  --jade-glow:rgba(30,216,180,.18);
+  --jade-subtle:rgba(30,216,180,.07);
+  --amethyst:#c4a7ff;
+  --amethyst-glow:rgba(196,167,255,.12);
+  --night:#04070e;
+  --night2:#080d18;
+  --night3:#0c1322;
+  --surface:rgba(255,255,255,.03);
+  --surface2:rgba(255,255,255,.055);
+  --line:rgba(255,255,255,.07);
+  --line2:rgba(255,255,255,.12);
+  --text:#cdd6e8;
+  --muted:#6b7a91;
+  --bright:#f0f4ff;
+  --r-xs:8px;--r-sm:14px;--r-md:20px;--r-lg:28px;--r-xl:36px;
+  --shadow-glow:0 0 60px rgba(30,216,180,.12);
+  --font-display:'Cormorant Garamond',Georgia,serif;
+  --font-body:'DM Sans',system-ui,sans-serif;
+}
+html{scroll-behavior:smooth;font-size:16px}
+body{font-family:var(--font-body);background:var(--night);color:var(--text);overflow-x:hidden;cursor:none;-webkit-font-smoothing:antialiased}
+a,button{cursor:none}
+img{display:block;max-width:100%}
+
+/* ══ CUSTOM CURSOR ══ */
+#cur{width:6px;height:6px;background:var(--jade);border-radius:50%;position:fixed;top:0;left:0;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);transition:background .2s}
+#cur-r{width:28px;height:28px;border:1px solid rgba(30,216,180,.45);border-radius:50%;position:fixed;top:0;left:0;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:width .2s,height .2s,opacity .2s}
+body:hover #cur-r{opacity:1}
+@media(hover:none){#cur,#cur-r{display:none}body,a,button{cursor:auto}}
+
+/* ══ PARTICLES ══ */
+#pCanvas{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none;opacity:.6}
+
+/* ══ SCROLLBAR ══ */
+::-webkit-scrollbar{width:2px}
+::-webkit-scrollbar-track{background:var(--night)}
+::-webkit-scrollbar-thumb{background:var(--jade-deep);border-radius:1px}
+
+/* ══════════════════════════════════════
+   NAVIGATION
+══════════════════════════════════════ */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:500;
+  padding:1.1rem 5%;
+  display:flex;align-items:center;justify-content:space-between;gap:2rem;
+  transition:background .5s,border-color .5s,backdrop-filter .5s;
+  border-bottom:1px solid transparent;
+}
+nav.scrolled{
+  background:rgba(4,7,14,.88);
+  backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);
+  border-color:var(--line);
+}
+.logo{
+  font-family:var(--font-display);font-size:1.55rem;font-weight:500;
+  color:var(--bright);letter-spacing:.06em;text-decoration:none;flex-shrink:0;
+  display:flex;align-items:center;gap:.35rem;
+}
+.logo-dot{
+  width:7px;height:7px;border-radius:50%;
+  background:linear-gradient(135deg,var(--jade),var(--amethyst));
+  box-shadow:0 0 10px var(--jade);
+  flex-shrink:0;
+}
+.nav-links{display:flex;gap:1.8rem;list-style:none}
+.nav-links a{
+  font-size:.72rem;font-weight:400;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--muted);text-decoration:none;
+  transition:color .3s;display:flex;align-items:center;gap:.35rem;
+}
+.nav-links a:hover{color:var(--jade)}
+.nav-links a i[data-lucide]{width:13px;height:13px;stroke-width:1.8}
+.nav-cta{
+  display:flex;align-items:center;gap:.5rem;
+  font-family:var(--font-body);font-size:.72rem;letter-spacing:.1em;
+  text-transform:uppercase;font-weight:600;
+  padding:.5rem 1.3rem .5rem 1rem;
+  background:linear-gradient(135deg,var(--jade),var(--jade-deep));
+  color:#04070e;border:none;border-radius:100px;
+  transition:transform .25s,box-shadow .25s;white-space:nowrap;
+  text-decoration:none;display:inline-flex;align-items:center;gap:.4rem;
+}
+.nav-cta:hover{transform:translateY(-1px);box-shadow:0 0 28px rgba(30,216,180,.35)}
+.nav-cta i[data-lucide]{width:13px;height:13px;stroke-width:2.5}
+.nav-hamburger{display:none;flex-direction:column;gap:4px;background:none;border:none;padding:.4rem}
+.nav-hamburger span{display:block;width:20px;height:1.5px;background:var(--text);border-radius:2px;transition:all .3s}
+
+/* Mobile Menu */
+.mobile-menu{
+  display:none;position:fixed;inset:0;
+  background:rgba(4,7,14,.97);backdrop-filter:blur(24px);
+  z-index:400;flex-direction:column;align-items:center;justify-content:center;gap:2.2rem;
+}
+.mobile-menu.open{display:flex}
+.mobile-menu a{
+  font-family:var(--font-display);font-size:2.4rem;font-style:italic;
+  color:var(--text);text-decoration:none;transition:color .3s;
+  display:flex;align-items:center;gap:.6rem;
+}
+.mobile-menu a:hover{color:var(--jade)}
+.mobile-close{
+  position:absolute;top:1.5rem;right:5%;
+  display:flex;align-items:center;justify-content:center;
+  width:36px;height:36px;border-radius:50%;
+  background:var(--surface2);border:1px solid var(--line);
+  color:var(--muted);cursor:none;transition:color .3s;
+}
+.mobile-close:hover{color:var(--bright)}
+.mobile-close i[data-lucide]{width:16px;height:16px}
+
+/* ══════════════════════════════════════
+   HERO
+══════════════════════════════════════ */
+.hero{
+  position:relative;z-index:10;min-height:100vh;
+  display:grid;grid-template-columns:1fr 1fr;gap:5rem;
+  align-items:center;padding:9rem 5% 5rem;overflow:hidden;
+}
+.hero-orb{
+  position:absolute;border-radius:50%;pointer-events:none;
+}
+.hero-orb-1{
+  width:800px;height:800px;
+  background:radial-gradient(circle,rgba(30,216,180,.09),transparent 68%);
+  top:-200px;right:-200px;
+}
+.hero-orb-2{
+  width:600px;height:600px;
+  background:radial-gradient(circle,rgba(196,167,255,.07),transparent 68%);
+  bottom:-100px;left:10%;
+}
+.hero-left{position:relative;z-index:2}
+
+/* Badge */
+.hero-badge{
+  display:inline-flex;align-items:center;gap:.55rem;
+  background:rgba(30,216,180,.06);border:1px solid rgba(30,216,180,.2);
+  border-radius:100px;padding:.4rem 1.1rem .4rem .7rem;
+  font-size:.67rem;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--jade);margin-bottom:2rem;opacity:0;
+}
+.badge-ping{
+  position:relative;width:7px;height:7px;flex-shrink:0;
+}
+.badge-ping::before,.badge-ping::after{
+  content:'';position:absolute;inset:0;border-radius:50%;background:var(--jade);
+}
+.badge-ping::after{animation:ping 1.8s ease-in-out infinite;opacity:0}
+@keyframes ping{0%{transform:scale(1);opacity:.7}100%{transform:scale(2.8);opacity:0}}
+
+/* Headline */
+.hero-title{
+  font-family:var(--font-display);
+  font-size:clamp(3rem,5.8vw,6rem);
+  font-weight:400;line-height:1.03;letter-spacing:-.01em;
+  color:var(--bright);margin-bottom:1.6rem;opacity:0;
+}
+.hero-title .grad{
+  background:linear-gradient(135deg,var(--jade) 10%,var(--amethyst) 90%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip:text;font-style:italic;
+}
+.hero-sub{
+  font-size:.97rem;font-weight:300;color:var(--muted);
+  max-width:500px;line-height:2;margin-bottom:2.8rem;opacity:0;
+}
+
+/* CTAs */
+.hero-ctas{display:flex;gap:1rem;align-items:center;flex-wrap:wrap;margin-bottom:3.5rem;opacity:0}
+.btn-primary{
+  font-family:var(--font-body);font-size:.75rem;font-weight:600;
+  letter-spacing:.09em;text-transform:uppercase;
+  padding:.9rem 2rem;
+  background:linear-gradient(135deg,var(--jade),var(--jade-deep));
+  color:#04070e;border:none;border-radius:100px;text-decoration:none;
+  display:inline-flex;align-items:center;gap:.5rem;
+  transition:transform .3s,box-shadow .3s;
+}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 40px rgba(30,216,180,.4)}
+.btn-primary i[data-lucide]{width:14px;height:14px;stroke-width:2.5}
+.btn-ghost{
+  font-family:var(--font-body);font-size:.75rem;font-weight:400;
+  letter-spacing:.09em;text-transform:uppercase;
+  padding:.9rem 2rem;background:transparent;
+  border:1px solid var(--line2);color:var(--muted);border-radius:100px;
+  text-decoration:none;display:inline-flex;align-items:center;gap:.5rem;
+  transition:border-color .3s,color .3s;
+}
+.btn-ghost:hover{border-color:var(--jade);color:var(--jade)}
+.btn-ghost i[data-lucide]{width:14px;height:14px;stroke-width:1.8}
+
+/* Stats */
+.hero-stats{display:flex;gap:3rem;opacity:0}
+.h-stat{border-left:1px solid var(--line);padding-left:1.4rem}
+.h-stat:first-child{border-left:none;padding-left:0}
+.h-stat-val{
+  font-family:var(--font-display);font-size:2rem;color:var(--bright);
+  display:block;line-height:1;font-weight:400;
+}
+.h-stat-val sup{font-size:1rem;color:var(--jade);font-family:var(--font-body)}
+.h-stat-label{font-size:.62rem;text-transform:uppercase;letter-spacing:.14em;color:var(--muted);margin-top:.4rem;display:block}
+
+/* Phone mockup */
+.hero-right{position:relative;z-index:2;display:flex;justify-content:center;align-items:center}
+.mockup-wrap{position:relative;width:100%;max-width:320px;margin:0 auto;opacity:0}
+.phone-frame{
+  width:100%;border-radius:46px;
+  background:var(--night2);
+  border:1.5px solid rgba(255,255,255,.08);
+  box-shadow:0 70px 140px rgba(0,0,0,.7),0 0 80px rgba(30,216,180,.06);
+  overflow:hidden;aspect-ratio:9/19.5;position:relative;
+}
+.phone-notch{
+  position:absolute;top:0;left:50%;transform:translateX(-50%);
+  width:95px;height:28px;background:var(--night);border-radius:0 0 20px 20px;z-index:5;
+}
+.phone-screen{
+  width:100%;height:100%;
+  background:linear-gradient(160deg,#0e2a20 0%,#071711 55%,#090f1c 100%);
+  padding:2.5rem 1.4rem 1.4rem;display:flex;flex-direction:column;gap:1rem;overflow:hidden;
+}
+.ps-header{display:flex;align-items:center;justify-content:space-between}
+.ps-time{font-size:.6rem;letter-spacing:.1em;color:rgba(255,255,255,.28)}
+.ps-icons{display:flex;gap:.3rem;align-items:center}
+.ps-icons i[data-lucide]{width:10px;height:10px;color:rgba(255,255,255,.3)}
+.ps-greeting{font-family:var(--font-display);font-size:1.18rem;color:rgba(255,255,255,.85);font-weight:400}
+.ps-greeting span{color:var(--jade);font-style:italic}
+.ps-card{background:rgba(30,216,180,.07);border:1px solid rgba(30,216,180,.18);border-radius:14px;padding:.95rem 1rem}
+.ps-card-meta{display:flex;align-items:center;gap:.4rem;margin-bottom:.3rem}
+.ps-card-meta i[data-lucide]{width:10px;height:10px;color:var(--jade)}
+.ps-card-label{font-size:.54rem;text-transform:uppercase;letter-spacing:.14em;color:var(--jade)}
+.ps-card-title{font-size:.86rem;color:var(--bright);margin-bottom:.65rem;font-weight:400}
+.ps-bar-track{height:2px;background:rgba(255,255,255,.07);border-radius:2px;overflow:hidden}
+.ps-bar{height:100%;width:62%;background:linear-gradient(90deg,var(--jade),var(--amethyst));border-radius:2px;animation:barPulse 3s ease-in-out infinite}
+@keyframes barPulse{0%,100%{width:62%}50%{width:76%}}
+.ps-stats-row{display:grid;grid-template-columns:repeat(3,1fr);gap:.55rem}
+.ps-stat{
+  background:rgba(255,255,255,.035);border:1px solid rgba(255,255,255,.055);
+  border-radius:10px;padding:.65rem .4rem;text-align:center;
+}
+.ps-stat-val{font-family:var(--font-display);font-size:1.1rem;color:var(--bright);display:block;line-height:1;font-weight:400}
+.ps-stat-lbl{font-size:.48rem;text-transform:uppercase;letter-spacing:.1em;color:rgba(255,255,255,.28);display:block;margin-top:.25rem}
+.ps-mood-row{display:flex;align-items:center;justify-content:space-between}
+.ps-mood-label{font-size:.6rem;color:var(--muted);display:flex;align-items:center;gap:.3rem}
+.ps-mood-label i[data-lucide]{width:10px;height:10px}
+.ps-mood-dots{display:flex;gap:3.5px}
+.ps-mood-dot{width:8px;height:8px;border-radius:50%}
+.ps-nature-img{width:100%;height:66px;border-radius:10px;object-fit:cover;opacity:.68}
+
+/* Float pills */
+.float-pill{
+  position:absolute;
+  background:rgba(8,13,24,.94);border:1px solid var(--line2);
+  border-radius:14px;padding:.65rem .9rem;
+  backdrop-filter:blur(20px);
+  display:flex;align-items:center;gap:.6rem;
+  box-shadow:0 20px 50px rgba(0,0,0,.5);
+}
+.fp1{top:14%;right:-24px}
+.fp2{bottom:20%;left:-24px}
+.fp-icon-wrap{
+  width:30px;height:30px;border-radius:8px;
+  background:rgba(30,216,180,.1);border:1px solid rgba(30,216,180,.2);
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+}
+.fp-icon-wrap i[data-lucide]{width:14px;height:14px;color:var(--jade)}
+.fp-text strong{display:block;font-size:.74rem;color:var(--bright);font-weight:500}
+.fp-text span{font-size:.6rem;color:var(--muted)}
+.fp-chip{
+  background:rgba(30,216,180,.12);border:1px solid rgba(30,216,180,.25);
+  color:var(--jade);font-size:.55rem;padding:.2rem .55rem;border-radius:100px;font-weight:600;white-space:nowrap;
+}
+
+/* ══ MARQUEE ══ */
+.marquee-sec{
+  padding:1.6rem 0;
+  border-top:1px solid var(--line);border-bottom:1px solid var(--line);
+  background:rgba(8,13,24,.45);overflow:hidden;white-space:nowrap;
+  position:relative;z-index:10;
+}
+.marquee-sec::before,.marquee-sec::after{
+  content:'';position:absolute;top:0;bottom:0;width:100px;z-index:2;pointer-events:none;
+}
+.marquee-sec::before{left:0;background:linear-gradient(to right,var(--night),transparent)}
+.marquee-sec::after{right:0;background:linear-gradient(to left,var(--night),transparent)}
+.mq-track{display:inline-flex;gap:2.2rem;animation:mq 30s linear infinite}
+.mq-item{
+  font-family:var(--font-display);font-size:.9rem;font-style:italic;
+  color:rgba(255,255,255,.16);flex-shrink:0;
+  display:flex;align-items:center;gap:.7rem;
+}
+.mq-item i[data-lucide]{width:11px;height:11px;color:rgba(30,216,180,.35)}
+@keyframes mq{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+/* ══ STATS STRIP ══ */
+.stats-strip{padding:5rem 5%;position:relative;z-index:10;border-bottom:1px solid var(--line)}
+.stats-inner{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line);border-radius:var(--r-lg);overflow:hidden}
+.stat-box{background:var(--night2);padding:2.5rem 2rem;text-align:center;transition:background .3s}
+.stat-box:hover{background:var(--night3)}
+.stat-icon-wrap{
+  width:44px;height:44px;border-radius:12px;
+  background:rgba(30,216,180,.08);border:1px solid rgba(30,216,180,.15);
+  display:flex;align-items:center;justify-content:center;
+  margin:0 auto 1.2rem;
+}
+.stat-icon-wrap i[data-lucide]{width:20px;height:20px;color:var(--jade);stroke-width:1.5}
+.stat-val{font-family:var(--font-display);font-size:3rem;font-weight:400;color:var(--bright);display:block;line-height:1}
+.stat-val span{color:var(--jade);font-size:2rem}
+.stat-label{font-size:.65rem;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);display:block;margin-top:.6rem}
+
+/* ══ SECTION SHARED ══ */
+.sec-tag{
+  font-size:.65rem;letter-spacing:.22em;text-transform:uppercase;color:var(--jade);
+  display:inline-flex;align-items:center;gap:.55rem;margin-bottom:.9rem;
+}
+.sec-tag::before{content:'';width:20px;height:1px;background:var(--jade)}
+.sec-title{
+  font-family:var(--font-display);
+  font-size:clamp(2.2rem,4vw,3.2rem);
+  font-weight:400;line-height:1.12;color:var(--bright);margin-bottom:1rem;
+}
+.sec-title em{font-style:italic;color:var(--jade)}
+.sec-body{font-size:.9rem;color:var(--muted);line-height:1.9;font-weight:300;max-width:480px}
+
+/* ══ FEATURES ══ */
+.features-sec{padding:9rem 5%;position:relative;z-index:10}
+.features-inner{max-width:1100px;margin:0 auto}
+.sec-header{margin-bottom:4rem}
+.feat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);border-radius:var(--r-xl);overflow:hidden}
+.feat-card{
+  background:var(--night2);padding:2.8rem 2.2rem;
+  transition:background .35s;position:relative;overflow:hidden;
+}
+.feat-card::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(circle at 0 0,rgba(30,216,180,.05),transparent 60%);
+  opacity:0;transition:opacity .4s;
+}
+.feat-card:hover{background:var(--night3)}
+.feat-card:hover::before{opacity:1}
+.feat-icon-box{
+  width:52px;height:52px;border-radius:14px;
+  background:linear-gradient(135deg,rgba(30,216,180,.1),rgba(196,167,255,.06));
+  border:1px solid rgba(30,216,180,.16);
+  display:flex;align-items:center;justify-content:center;margin-bottom:1.6rem;
+  transition:border-color .3s,box-shadow .3s;
+}
+.feat-card:hover .feat-icon-box{border-color:rgba(30,216,180,.3);box-shadow:0 0 20px rgba(30,216,180,.12)}
+.feat-icon-box i[data-lucide]{width:22px;height:22px;color:var(--jade);stroke-width:1.5}
+.feat-name{font-family:var(--font-display);font-size:1.25rem;font-weight:400;color:var(--bright);margin-bottom:.7rem}
+.feat-desc{font-size:.82rem;color:var(--muted);line-height:1.85;font-weight:300}
+.feat-arrow{
+  display:flex;align-items:center;gap:.4rem;margin-top:1.2rem;
+  font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;
+  color:rgba(30,216,180,.4);transition:color .3s;text-decoration:none;
+}
+.feat-arrow:hover{color:var(--jade)}
+.feat-arrow i[data-lucide]{width:12px;height:12px;transition:transform .3s}
+.feat-arrow:hover i[data-lucide]{transform:translateX(3px)}
+
+/* ══ SHOWCASE ══ */
+.showcase-sec{padding:9rem 5%;background:var(--night2);position:relative;z-index:10}
+.showcase-inner{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:6rem;align-items:center}
+.showcase-imgs{position:relative;height:520px}
+.si-main{
+  width:58%;border-radius:var(--r-xl);overflow:hidden;
+  box-shadow:0 50px 100px rgba(0,0,0,.6);
+  position:absolute;left:0;top:0;z-index:2;border:1px solid var(--line2);
+}
+.si-main img{width:100%;height:100%;object-fit:cover}
+.si-secondary{
+  width:48%;border-radius:var(--r-lg);overflow:hidden;
+  box-shadow:0 30px 70px rgba(0,0,0,.5);
+  position:absolute;right:0;bottom:0;z-index:3;border:1px solid var(--line2);
+}
+.si-secondary img{width:100%;height:100%;object-fit:cover}
+.si-stat-card{
+  position:absolute;top:38%;right:-16px;z-index:4;
+  background:rgba(8,13,24,.96);border:1px solid rgba(30,216,180,.28);
+  border-radius:var(--r-sm);padding:.8rem 1rem;
+  text-align:center;box-shadow:0 12px 40px rgba(0,0,0,.5);
+  display:flex;flex-direction:column;align-items:center;gap:.3rem;
+}
+.si-stat-card i[data-lucide]{width:16px;height:16px;color:var(--jade)}
+.si-stat-val{font-family:var(--font-display);font-size:1.5rem;color:var(--jade);line-height:1;font-weight:400}
+.si-stat-lbl{font-size:.54rem;text-transform:uppercase;letter-spacing:.1em;color:var(--muted)}
+.sc-list{list-style:none;display:flex;flex-direction:column;gap:.9rem;margin-top:1.8rem}
+.sc-list li{
+  font-size:.88rem;color:var(--text);display:flex;align-items:flex-start;gap:.75rem;line-height:1.7;
+}
+.sc-list li i[data-lucide]{width:14px;height:14px;color:var(--jade);flex-shrink:0;margin-top:.25rem;stroke-width:2}
+.sc-cta{margin-top:2.8rem}
+
+/* ══ HOW IT WORKS ══ */
+.how-sec{padding:9rem 5%;position:relative;z-index:10}
+.how-inner{max-width:1100px;margin:0 auto}
+.steps-grid{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:1px;
+  background:var(--line);border-radius:var(--r-xl);overflow:hidden;margin-top:4rem;
+}
+.step{background:var(--night2);padding:2.8rem 2rem;position:relative;transition:background .3s}
+.step:hover{background:var(--night3)}
+.step-connector{
+  position:absolute;top:3.4rem;right:-1px;width:1px;height:40px;
+  background:linear-gradient(to bottom,transparent,var(--jade),transparent);
+  opacity:.35;
+}
+.step:last-child .step-connector{display:none}
+.step-num{
+  font-family:var(--font-display);font-size:3.5rem;font-weight:300;
+  color:rgba(30,216,180,.08);line-height:1;margin-bottom:.9rem;letter-spacing:-.04em;
+}
+.step-icon-box{
+  width:44px;height:44px;border-radius:12px;
+  background:rgba(30,216,180,.07);border:1px solid rgba(30,216,180,.14);
+  display:flex;align-items:center;justify-content:center;margin-bottom:1rem;
+}
+.step-icon-box i[data-lucide]{width:20px;height:20px;color:var(--jade);stroke-width:1.5}
+.step-title{font-size:.95rem;font-weight:500;color:var(--bright);margin-bottom:.6rem}
+.step-desc{font-size:.8rem;color:var(--muted);line-height:1.85;font-weight:300}
+
+/* ══ QUOTE ══ */
+.quote-sec{
+  padding:10rem 5%;text-align:center;
+  overflow:hidden;position:relative;z-index:10;
+}
+.quote-bg-word{
+  position:absolute;font-family:var(--font-display);font-size:18vw;font-weight:600;
+  color:rgba(30,216,180,.022);white-space:nowrap;
+  top:50%;left:50%;transform:translate(-50%,-50%);
+  pointer-events:none;letter-spacing:-.04em;will-change:transform;
+}
+.quote-mark{
+  font-family:var(--font-display);font-size:5rem;color:rgba(30,216,180,.15);
+  line-height:.7;display:block;margin-bottom:1rem;
+}
+.quote-text{
+  font-family:var(--font-display);
+  font-size:clamp(1.7rem,3.5vw,2.9rem);
+  font-weight:300;font-style:italic;color:var(--bright);
+  line-height:1.52;max-width:820px;margin:0 auto 1.8rem;
+  position:relative;z-index:2;
+}
+.quote-text .hl{color:var(--jade);font-weight:400}
+.quote-attr{
+  font-size:.68rem;letter-spacing:.22em;text-transform:uppercase;color:var(--muted);
+  position:relative;z-index:2;display:flex;align-items:center;justify-content:center;gap:.7rem;
+}
+.quote-attr::before,.quote-attr::after{content:'';width:30px;height:1px;background:var(--line2)}
+
+/* ══ PANELS ══ */
+.panels-sec{padding:9rem 5%;position:relative;z-index:10}
+.panels-inner{max-width:1100px;margin:0 auto}
+.panel{display:grid;grid-template-columns:1fr 1fr;gap:5.5rem;align-items:center;margin-bottom:8rem}
+.panel:last-child{margin-bottom:0}
+.panel.rev{direction:rtl}
+.panel.rev>*{direction:ltr}
+.pv{border-radius:var(--r-xl);overflow:hidden;border:1px solid var(--line);position:relative;aspect-ratio:4/3}
+.pv-inner{position:absolute;inset:0;width:100%;height:120%;top:-10%}
+
+/* Breathwork visual */
+.bw-bg{
+  background:radial-gradient(ellipse at center,rgba(30,216,180,.12) 0%,rgba(4,7,14,.96) 65%);
+  display:flex;align-items:center;justify-content:center;flex-direction:column;gap:1.2rem;
+}
+.bw-rings{position:relative;width:190px;height:190px;flex-shrink:0}
+.bw-ring{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);border-radius:50%;border:1px solid rgba(30,216,180,.35)}
+.r1{width:44px;height:44px;border-color:rgba(30,216,180,.9);animation:bwr 4s ease-in-out infinite}
+.r2{width:80px;height:80px;animation:bwr 4s ease-in-out infinite .3s}
+.r3{width:116px;height:116px;animation:bwr 4s ease-in-out infinite .6s}
+.r4{width:152px;height:152px;animation:bwr 4s ease-in-out infinite .9s;border-color:rgba(30,216,180,.14)}
+.r5{width:188px;height:188px;animation:bwr 4s ease-in-out infinite 1.2s;border-color:rgba(30,216,180,.05)}
+@keyframes bwr{0%,100%{transform:translate(-50%,-50%) scale(1);opacity:1}50%{transform:translate(-50%,-50%) scale(1.12);opacity:.4}}
+.bw-center{
+  width:32px;height:32px;background:var(--jade);border-radius:50%;
+  position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  box-shadow:0 0 32px rgba(30,216,180,.8);animation:bwr 4s ease-in-out infinite;
+}
+.bw-bottom{text-align:center}
+.bw-phase-text{
+  font-family:var(--font-display);font-size:1.05rem;font-style:italic;
+  color:rgba(255,255,255,.5);transition:opacity .5s;
+}
+.bw-bottom-lbl{
+  font-size:.56rem;text-transform:uppercase;letter-spacing:.18em;color:var(--jade);margin-top:.3rem;
+  display:flex;align-items:center;justify-content:center;gap:.4rem;
+}
+.bw-bottom-lbl i[data-lucide]{width:10px;height:10px}
+
+/* Journal visual */
+.jv-bg{
+  background:linear-gradient(145deg,rgba(8,13,24,.98),rgba(12,16,34,.98));
+  display:flex;flex-direction:column;padding:1.8rem;gap:.9rem;
+}
+.jv-top{display:flex;justify-content:space-between;align-items:center}
+.jv-date{font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:var(--jade);display:flex;align-items:center;gap:.4rem}
+.jv-date i[data-lucide]{width:10px;height:10px}
+.jv-mood-row{display:flex;gap:4px}
+.jv-dot{width:7px;height:7px;border-radius:50%}
+.jv-title{font-family:var(--font-display);font-size:1.05rem;color:var(--bright);font-weight:400}
+.jv-divider{height:1px;background:var(--line)}
+.jv-body{font-size:.77rem;color:var(--muted);line-height:1.95;font-weight:300;flex:1;font-style:italic}
+.jv-cursor{display:inline-block;width:1.5px;height:.82em;background:var(--jade);margin-left:1px;animation:blink .9s step-end infinite;vertical-align:middle}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+.jv-ai{
+  background:rgba(30,216,180,.06);border:1px solid rgba(30,216,180,.16);
+  border-radius:10px;padding:.8rem;display:flex;flex-direction:column;gap:.3rem;
+}
+.jv-ai-header{display:flex;align-items:center;gap:.4rem}
+.jv-ai-lbl{font-size:.54rem;text-transform:uppercase;letter-spacing:.14em;color:var(--jade)}
+.jv-ai-lbl i[data-lucide]{width:10px;height:10px}
+.jv-ai-text{font-size:.74rem;color:rgba(255,255,255,.5);font-style:italic}
+
+/* Sleep visual */
+.sv-bg{
+  background:linear-gradient(145deg,rgba(6,8,20,.99),rgba(10,8,26,.99));
+  display:flex;flex-direction:column;padding:1.8rem;gap:1rem;
+}
+.sv-hd{display:flex;justify-content:space-between;align-items:center}
+.sv-lbl{font-size:.58rem;text-transform:uppercase;letter-spacing:.14em;color:rgba(196,167,255,.55);display:flex;align-items:center;gap:.35rem}
+.sv-lbl i[data-lucide]{width:10px;height:10px}
+.sv-good{font-size:.58rem;text-transform:uppercase;letter-spacing:.1em;color:var(--jade);display:flex;align-items:center;gap:.3rem}
+.sv-good i[data-lucide]{width:10px;height:10px}
+.sv-big{font-family:var(--font-display);font-size:2.8rem;color:var(--bright);font-weight:300;line-height:1}
+.sv-big sub{font-size:.88rem;color:var(--muted);font-family:var(--font-body)}
+.sv-bars{display:flex;align-items:flex-end;gap:5px;height:58px}
+.sv-bar{border-radius:3px;flex:1}
+.sv-leg-row{display:flex;gap:1rem;flex-wrap:wrap}
+.sv-leg{display:flex;align-items:center;gap:.4rem;font-size:.56rem;text-transform:uppercase;letter-spacing:.1em;color:rgba(255,255,255,.28)}
+.sv-leg i[data-lucide]{width:8px;height:8px}
+.sv-scores{display:grid;grid-template-columns:repeat(3,1fr);gap:.5rem}
+.sv-sc{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.05);border-radius:10px;padding:.65rem;text-align:center}
+.sv-sc-val{font-family:var(--font-display);font-size:1.1rem;color:var(--bright);display:block;line-height:1;font-weight:400}
+.sv-sc-lbl{font-size:.48rem;text-transform:uppercase;letter-spacing:.1em;color:rgba(255,255,255,.26);display:block;margin-top:.25rem}
+
+/* Panel copy */
+.pc-tag{font-size:.62rem;letter-spacing:.2em;text-transform:uppercase;color:var(--jade);display:flex;align-items:center;gap:.55rem;margin-bottom:.9rem}
+.pc-tag::before{content:'';width:16px;height:1px;background:var(--jade)}
+.pc-title{font-family:var(--font-display);font-size:clamp(1.9rem,2.8vw,2.6rem);font-weight:400;line-height:1.18;color:var(--bright);margin-bottom:1.1rem}
+.pc-title em{font-style:italic;color:var(--jade)}
+.pc-body{font-size:.88rem;color:var(--muted);line-height:1.95;font-weight:300;margin-bottom:1.6rem}
+.pc-list{list-style:none;display:flex;flex-direction:column;gap:.75rem}
+.pc-list li{font-size:.83rem;color:var(--text);display:flex;align-items:flex-start;gap:.75rem;line-height:1.65}
+.pc-list li i[data-lucide]{width:14px;height:14px;color:var(--jade);flex-shrink:0;margin-top:.22rem;stroke-width:2}
+
+/* ══ TESTIMONIALS ══ */
+.testi-sec{padding:9rem 5%;background:var(--night2);position:relative;z-index:10}
+.testi-inner{max-width:1100px;margin:0 auto}
+.testi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.4rem;margin-top:4rem}
+.tcard{
+  background:var(--night);border:1px solid var(--line);
+  border-radius:var(--r-lg);padding:2.2rem;
+  display:flex;flex-direction:column;gap:1rem;
+  transition:border-color .35s,transform .35s,box-shadow .35s;
+  position:relative;overflow:hidden;
+}
+.tcard::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,var(--jade),transparent);
+  opacity:0;transition:opacity .4s;
+}
+.tcard:hover{border-color:rgba(30,216,180,.2);transform:translateY(-5px);box-shadow:0 30px 60px rgba(0,0,0,.35),0 0 40px rgba(30,216,180,.05)}
+.tcard:hover::before{opacity:1}
+.tcard-stars{display:flex;gap:.2rem}
+.tcard-stars i[data-lucide]{width:13px;height:13px;color:var(--jade);fill:var(--jade)}
+.tcard-text{
+  font-family:var(--font-display);font-size:.98rem;font-style:italic;
+  color:rgba(255,255,255,.75);line-height:1.8;flex:1;
+}
+.tcard-author{display:flex;align-items:center;gap:.9rem;padding-top:.9rem;border-top:1px solid var(--line);margin-top:auto}
+.tcard-avatar{width:40px;height:40px;border-radius:50%;overflow:hidden;flex-shrink:0;border:1.5px solid var(--line2)}
+.tcard-avatar img{width:100%;height:100%;object-fit:cover}
+.tcard-name strong{display:block;font-size:.8rem;color:var(--bright);font-weight:500}
+.tcard-name span{font-size:.66rem;color:var(--muted)}
+
+/* ══ PRICING ══ */
+.pricing-sec{padding:9rem 5%;position:relative;z-index:10}
+.pricing-inner{max-width:1100px;margin:0 auto}
+.price-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.4rem;margin-top:4rem}
+.price-card{
+  background:var(--night2);border:1px solid var(--line);
+  border-radius:var(--r-xl);padding:2.8rem;position:relative;
+  transition:border-color .35s,transform .35s;
+}
+.price-card:hover{transform:translateY(-5px)}
+.price-card.featured{
+  border-color:rgba(30,216,180,.28);
+  background:linear-gradient(155deg,rgba(10,26,36,.95),rgba(6,16,28,.97));
+  box-shadow:0 0 60px rgba(30,216,180,.08);
+}
+.price-badge{
+  position:absolute;top:-14px;left:50%;transform:translateX(-50%);
+  background:linear-gradient(135deg,var(--jade),var(--amethyst));
+  color:#04070e;font-size:.58rem;letter-spacing:.12em;text-transform:uppercase;
+  font-weight:700;padding:.32rem 1rem;border-radius:100px;white-space:nowrap;
+  display:flex;align-items:center;gap:.35rem;
+}
+.price-badge i[data-lucide]{width:10px;height:10px}
+.price-plan{
+  font-size:.65rem;text-transform:uppercase;letter-spacing:.18em;color:var(--jade);
+  margin-bottom:1rem;display:flex;align-items:center;gap:.45rem;
+}
+.price-plan i[data-lucide]{width:12px;height:12px}
+.price-amount{font-family:var(--font-display);font-size:3.2rem;color:var(--bright);font-weight:300;line-height:1}
+.price-amount sup{font-size:1.2rem;font-family:var(--font-body);font-weight:300;color:var(--muted);vertical-align:super}
+.price-amount span{font-size:.85rem;font-family:var(--font-body);font-weight:300;color:var(--muted)}
+.price-desc{font-size:.82rem;color:var(--muted);line-height:1.75;margin:1rem 0 1.4rem}
+.price-divider{height:1px;background:var(--line);margin-bottom:1.4rem}
+.price-feats{list-style:none;display:flex;flex-direction:column;gap:.7rem;margin-bottom:2.2rem}
+.price-feats li{font-size:.8rem;color:var(--text);display:flex;align-items:center;gap:.55rem}
+.price-feats li i[data-lucide]{width:14px;height:14px;color:var(--jade);flex-shrink:0;stroke-width:2.5}
+.price-feats li.dim i[data-lucide]{color:var(--muted)}
+.price-feats li.dim{color:var(--muted)}
+.price-btn{
+  display:flex;align-items:center;justify-content:center;gap:.5rem;
+  text-align:center;padding:.88rem;border-radius:100px;
+  font-size:.74rem;letter-spacing:.1em;text-transform:uppercase;
+  font-weight:500;text-decoration:none;transition:all .3s;border:none;font-family:var(--font-body);
+}
+.price-btn i[data-lucide]{width:13px;height:13px}
+.price-btn.outline{border:1px solid var(--line);color:var(--muted);background:transparent}
+.price-btn.outline:hover{border-color:var(--jade);color:var(--jade)}
+.price-btn.filled{background:linear-gradient(135deg,var(--jade),var(--jade-deep));color:#04070e;font-weight:600}
+.price-btn.filled:hover{box-shadow:0 0 30px rgba(30,216,180,.35)}
+
+/* ══ CTA ══ */
+.cta-sec{padding:10rem 5%;text-align:center;position:relative;z-index:10;overflow:hidden}
+.cta-orb{position:absolute;border-radius:50%;pointer-events:none}
+.cta-orb-1{width:800px;height:800px;background:radial-gradient(circle,rgba(30,216,180,.06),transparent 65%);top:50%;left:50%;transform:translate(-50%,-50%)}
+.cta-orb-2{width:500px;height:500px;background:radial-gradient(circle,rgba(196,167,255,.05),transparent 65%);top:40%;left:60%;transform:translate(-50%,-50%)}
+.cta-eyebrow{
+  display:inline-flex;align-items:center;gap:.5rem;margin-bottom:1.5rem;
+  font-size:.65rem;letter-spacing:.2em;text-transform:uppercase;color:var(--jade);
+}
+.cta-eyebrow i[data-lucide]{width:13px;height:13px}
+.cta-title{
+  font-family:var(--font-display);
+  font-size:clamp(2.8rem,6vw,5.5rem);font-weight:400;line-height:1.04;
+  color:var(--bright);margin-bottom:1.3rem;position:relative;z-index:2;
+}
+.cta-title em{font-style:italic;color:var(--jade)}
+.cta-sub{font-size:.95rem;color:var(--muted);font-weight:300;margin-bottom:2.8rem;position:relative;z-index:2}
+.cta-btns{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;position:relative;z-index:2}
+.stores{display:flex;gap:.9rem;justify-content:center;margin-top:1.6rem;position:relative;z-index:2;flex-wrap:wrap}
+.store-btn{
+  display:flex;align-items:center;gap:.6rem;
+  background:var(--surface);border:1px solid var(--line);
+  border-radius:var(--r-sm);padding:.7rem 1.2rem;
+  font-size:.76rem;color:var(--text);text-decoration:none;
+  transition:border-color .3s,background .3s;
+}
+.store-btn:hover{border-color:rgba(30,216,180,.3);background:rgba(30,216,180,.05)}
+.store-btn i[data-lucide]{width:18px;height:18px;color:var(--jade)}
+
+/* ══ FOOTER ══ */
+footer{
+  padding:5rem 5% 3rem;border-top:1px solid var(--line);
+  position:relative;z-index:10;background:var(--night);
+}
+.footer-top{display:flex;justify-content:space-between;align-items:flex-start;gap:3rem;flex-wrap:wrap;margin-bottom:4rem}
+.footer-brand .logo{font-size:1.35rem}
+.footer-brand p{font-size:.8rem;color:var(--muted);max-width:240px;line-height:1.8;margin-top:.9rem}
+.footer-social{display:flex;gap:.6rem;margin-top:1.4rem}
+.footer-social a{
+  width:36px;height:36px;border-radius:10px;
+  background:var(--surface);border:1px solid var(--line);
+  display:flex;align-items:center;justify-content:center;
+  color:var(--muted);text-decoration:none;transition:all .3s;
+}
+.footer-social a:hover{border-color:rgba(30,216,180,.3);color:var(--jade);background:rgba(30,216,180,.06)}
+.footer-social a i[data-lucide]{width:15px;height:15px}
+.footer-cols{display:flex;gap:4rem;flex-wrap:wrap}
+.footer-col h4{
+  font-size:.63rem;text-transform:uppercase;letter-spacing:.18em;color:var(--jade);
+  margin-bottom:1.2rem;display:flex;align-items:center;gap:.4rem;
+}
+.footer-col h4 i[data-lucide]{width:11px;height:11px}
+.footer-col ul{list-style:none;display:flex;flex-direction:column;gap:.65rem}
+.footer-col a{font-size:.8rem;color:var(--muted);text-decoration:none;transition:color .3s;display:flex;align-items:center;gap:.35rem}
+.footer-col a:hover{color:var(--bright)}
+.footer-col a i[data-lucide]{width:11px;height:11px;opacity:.4}
+.footer-bottom{
+  display:flex;justify-content:space-between;align-items:center;
+  padding-top:2.5rem;border-top:1px solid var(--line);flex-wrap:wrap;gap:1rem;
+}
+.footer-copy{font-size:.68rem;color:rgba(255,255,255,.18);letter-spacing:.06em;display:flex;align-items:center;gap:.4rem}
+.footer-copy i[data-lucide]{width:11px;height:11px;color:var(--jade);opacity:.5}
+.footer-links{display:flex;gap:1.5rem}
+.footer-links a{font-size:.68rem;color:rgba(255,255,255,.18);text-decoration:none;letter-spacing:.08em;transition:color .3s}
+.footer-links a:hover{color:var(--jade)}
+
+/* ══ ANIMATIONS ══ */
+.reveal{opacity:0;transform:translateY(26px)}
+.reveal-l{opacity:0;transform:translateX(-40px)}
+.reveal-r{opacity:0;transform:translateX(40px)}
+
+/* ══ RESPONSIVE ══ */
+@media(max-width:1024px){
+  .hero{grid-template-columns:1fr;text-align:center;padding:8rem 5% 4rem}
+  .hero-left{display:flex;flex-direction:column;align-items:center}
+  .hero-sub,.h-stat-label{text-align:center}
+  .hero-ctas,.hero-stats{justify-content:center}
+  .hero-right{display:none}
+  .feat-grid{grid-template-columns:repeat(2,1fr)}
+  .showcase-inner{grid-template-columns:1fr;gap:3.5rem}
+  .showcase-imgs{height:300px}
+  .si-main{width:54%;height:100%}
+  .si-secondary{width:46%;height:66%}
+  .steps-grid{grid-template-columns:repeat(2,1fr)}
+  .panel{grid-template-columns:1fr;gap:3rem}
+  .panel.rev{direction:ltr}
+  .testi-grid{grid-template-columns:repeat(2,1fr)}
+  .price-grid{grid-template-columns:1fr;max-width:440px;margin-left:auto;margin-right:auto}
+  .stats-inner{grid-template-columns:repeat(2,1fr)}
+  .footer-top{flex-direction:column}
+}
+@media(max-width:768px){
+  nav{padding:1rem 5%}
+  .nav-links,.nav-cta{display:none}
+  .nav-hamburger{display:flex}
+  .feat-grid,.testi-grid,.steps-grid{grid-template-columns:1fr}
+  .features-sec,.showcase-sec,.how-sec,.quote-sec,.panels-sec,.testi-sec,.pricing-sec,.cta-sec{padding:6rem 5%}
+  .stats-strip{padding:3.5rem 5%}
+  .footer-cols{gap:2rem}
+  .footer-bottom{flex-direction:column;text-align:center}
+  .showcase-imgs{height:240px}
+}
+@media(max-width:480px){
+  .hero-title{font-size:2.6rem}
+  .hero-ctas,.cta-btns{flex-direction:column;align-items:stretch}
+  .btn-primary,.btn-ghost{text-align:center;justify-content:center}
+  .hero-stats{flex-wrap:wrap;gap:1.5rem}
+  .h-stat{border-left:none;padding-left:0}
+  .stores{flex-direction:column;align-items:center}
+  .footer-cols{flex-direction:column;gap:2rem}
+}
+</style>
+</head>
+<body>
+
+<!-- Cursor -->
+<div id="cur"></div>
+<div id="cur-r"></div>
+
+<!-- Particles -->
+<canvas id="pCanvas"></canvas>
+
+<!-- Mobile Menu -->
+<div class="mobile-menu" id="mobileMenu">
+  <button class="mobile-close" id="mobileClose"><i data-lucide="x"></i></button>
+  <a href="#features" onclick="closeMobile()"><i data-lucide="sparkles"></i> Features</a>
+  <a href="#showcase" onclick="closeMobile()"><i data-lucide="smartphone"></i> App</a>
+  <a href="#how" onclick="closeMobile()"><i data-lucide="map"></i> How It Works</a>
+  <a href="#pricing" onclick="closeMobile()"><i data-lucide="tag"></i> Pricing</a>
+  <a href="#stories" onclick="closeMobile()"><i data-lucide="heart"></i> Stories</a>
+</div>
+
+<!-- NAV -->
+<nav id="nav">
+  <a href="#" class="logo"><span class="logo-dot"></span>Sol<em style="font-style:italic;color:var(--jade)">a</em>ce</a>
+  <ul class="nav-links">
+    <li><a href="#features"><i data-lucide="sparkles"></i>Features</a></li>
+    <li><a href="#showcase"><i data-lucide="smartphone"></i>App</a></li>
+    <li><a href="#how"><i data-lucide="map"></i>How It Works</a></li>
+    <li><a href="#pricing"><i data-lucide="tag"></i>Pricing</a></li>
+    <li><a href="#stories"><i data-lucide="message-circle"></i>Stories</a></li>
+  </ul>
+  <a href="#" class="nav-cta"><i data-lucide="arrow-right"></i>Start Free</a>
+  <button class="nav-hamburger" id="hamburger" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- ══ HERO ══ -->
+<section class="hero">
+  <div class="hero-orb hero-orb-1"></div>
+  <div class="hero-orb hero-orb-2"></div>
+
+  <div class="hero-left">
+    <div class="hero-badge" id="hBadge">
+      <div class="badge-ping"></div>
+      Rated #1 Wellness App 2025
+    </div>
+    <h1 class="hero-title" id="hTitle">
+      Your mind deserves<br>a <span class="grad">sanctuary.</span>
+    </h1>
+    <p class="hero-sub" id="hSub">Solace combines breathwork, AI journaling, sleep science, and mood tracking into one beautifully calming experience — built for modern life's relentless pace.</p>
+    <div class="hero-ctas" id="hCtas">
+      <a href="#" class="btn-primary"><i data-lucide="play-circle"></i>Begin Free Trial</a>
+      <a href="#showcase" class="btn-ghost"><i data-lucide="chevron-down"></i>See the App</a>
+    </div>
+    <div class="hero-stats" id="hStats">
+      <div class="h-stat">
+        <span class="h-stat-val">2.4<sup>M</sup></span>
+        <span class="h-stat-label">Active Users</span>
+      </div>
+      <div class="h-stat">
+        <span class="h-stat-val">4.9<sup>★</sup></span>
+        <span class="h-stat-label">App Store</span>
+      </div>
+      <div class="h-stat">
+        <span class="h-stat-val">91<sup>%</sup></span>
+        <span class="h-stat-label">Less Anxiety</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Phone Mockup -->
+  <div class="hero-right">
+    <div class="mockup-wrap" id="phoneWrap">
+      <div class="phone-frame">
+        <div class="phone-notch"></div>
+        <div class="phone-screen">
+          <div class="ps-header">
+            <div class="ps-time">9:41 AM</div>
+            <div class="ps-icons">
+              <i data-lucide="wifi"></i>
+              <i data-lucide="battery"></i>
+            </div>
+          </div>
+          <div class="ps-greeting">Good morning, <span>Deepak</span> 🌿</div>
+          <img class="ps-nature-img" src="https://images.unsplash.com/photo-1518241353330-0f7941c2d9b5?w=400&q=80&auto=format" alt="peaceful nature" loading="lazy"/>
+          <div class="ps-card">
+            <div class="ps-card-meta">
+              <i data-lucide="wind"></i>
+              <div class="ps-card-label">Now Playing</div>
+            </div>
+            <div class="ps-card-title">Morning Breathwork · 8 min</div>
+            <div class="ps-bar-track"><div class="ps-bar"></div></div>
+          </div>
+          <div class="ps-stats-row">
+            <div class="ps-stat"><span class="ps-stat-val">14</span><span class="ps-stat-lbl">Streak</span></div>
+            <div class="ps-stat"><span class="ps-stat-val">82%</span><span class="ps-stat-lbl">Calm</span></div>
+            <div class="ps-stat"><span class="ps-stat-val">7.4h</span><span class="ps-stat-lbl">Sleep</span></div>
+          </div>
+          <div class="ps-mood-row">
+            <span class="ps-mood-label"><i data-lucide="smile"></i>Today's mood</span>
+            <div class="ps-mood-dots">
+              <div class="ps-mood-dot" style="background:#ef4444"></div>
+              <div class="ps-mood-dot" style="background:#f59e0b"></div>
+              <div class="ps-mood-dot" style="background:#1ed8b4"></div>
+              <div class="ps-mood-dot" style="background:#1ed8b4"></div>
+              <div class="ps-mood-dot" style="background:#c4a7ff"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Float pills -->
+      <div class="float-pill fp1">
+        <div class="fp-icon-wrap"><i data-lucide="trending-up"></i></div>
+        <div class="fp-text">
+          <strong>Mood improved</strong>
+          <span>+24% this week</span>
+        </div>
+      </div>
+      <div class="float-pill fp2">
+        <div class="fp-icon-wrap"><i data-lucide="moon"></i></div>
+        <div class="fp-text">
+          <strong>Deep sleep</strong>
+          <span>+42 min avg</span>
+        </div>
+        <div class="fp-chip">New!</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee-sec">
+  <div class="mq-track">
+    <span class="mq-item"><i data-lucide="wind"></i>Breathwork</span>
+    <span class="mq-item"><i data-lucide="feather"></i>Guided Meditation</span>
+    <span class="mq-item"><i data-lucide="moon"></i>Sleep Rituals</span>
+    <span class="mq-item"><i data-lucide="book-open"></i>Mood Journal</span>
+    <span class="mq-item"><i data-lucide="brain"></i>CBT Exercises</span>
+    <span class="mq-item"><i data-lucide="heart-pulse"></i>Anxiety Relief</span>
+    <span class="mq-item"><i data-lucide="music"></i>Sound Therapy</span>
+    <span class="mq-item"><i data-lucide="leaf"></i>Mindful Habits</span>
+    <span class="mq-item"><i data-lucide="wind"></i>Breathwork</span>
+    <span class="mq-item"><i data-lucide="feather"></i>Guided Meditation</span>
+    <span class="mq-item"><i data-lucide="moon"></i>Sleep Rituals</span>
+    <span class="mq-item"><i data-lucide="book-open"></i>Mood Journal</span>
+    <span class="mq-item"><i data-lucide="brain"></i>CBT Exercises</span>
+    <span class="mq-item"><i data-lucide="heart-pulse"></i>Anxiety Relief</span>
+    <span class="mq-item"><i data-lucide="music"></i>Sound Therapy</span>
+    <span class="mq-item"><i data-lucide="leaf"></i>Mindful Habits</span>
+  </div>
+</div>
+
+<!-- STATS -->
+<div class="stats-strip">
+  <div class="stats-inner">
+    <div class="stat-box reveal">
+      <div class="stat-icon-wrap"><i data-lucide="users"></i></div>
+      <span class="stat-val">2.4<span>M+</span></span>
+      <span class="stat-label">Active Users Worldwide</span>
+    </div>
+    <div class="stat-box reveal">
+      <div class="stat-icon-wrap"><i data-lucide="star"></i></div>
+      <span class="stat-val">4.9<span>★</span></span>
+      <span class="stat-label">App Store Rating</span>
+    </div>
+    <div class="stat-box reveal">
+      <div class="stat-icon-wrap"><i data-lucide="shield-check"></i></div>
+      <span class="stat-val">91<span>%</span></span>
+      <span class="stat-label">Report Less Anxiety</span>
+    </div>
+    <div class="stat-box reveal">
+      <div class="stat-icon-wrap"><i data-lucide="globe"></i></div>
+      <span class="stat-val">180<span>+</span></span>
+      <span class="stat-label">Countries Reached</span>
+    </div>
+  </div>
+</div>
+
+<!-- FEATURES -->
+<section class="features-sec" id="features">
+  <div class="features-inner">
+    <div class="sec-header">
+      <div class="sec-tag reveal">What's inside</div>
+      <h2 class="sec-title reveal">Six pillars of your <em>mental sanctuary</em></h2>
+      <p class="sec-body reveal">Each feature is designed by clinical psychologists, neuroscientists, and meditation teachers — not engagement algorithms.</p>
+    </div>
+    <div class="feat-grid">
+      <div class="feat-card reveal">
+        <div class="feat-icon-box"><i data-lucide="wind"></i></div>
+        <div class="feat-name">Breathwork</div>
+        <p class="feat-desc">Science-backed breathing exercises — Box, 4-7-8, Wim Hof — that activate your parasympathetic nervous system and reduce cortisol in minutes.</p>
+        <a href="#" class="feat-arrow">Learn more <i data-lucide="arrow-right"></i></a>
+      </div>
+      <div class="feat-card reveal">
+        <div class="feat-icon-box"><i data-lucide="book-open"></i></div>
+        <div class="feat-name">AI Journaling</div>
+        <p class="feat-desc">An empathetic AI that surfaces emotional patterns, offers gentle reframes, and guides you deeper into self-understanding with personalised daily prompts.</p>
+        <a href="#" class="feat-arrow">Learn more <i data-lucide="arrow-right"></i></a>
+      </div>
+      <div class="feat-card reveal">
+        <div class="feat-icon-box"><i data-lucide="moon"></i></div>
+        <div class="feat-name">Sleep Rituals</div>
+        <p class="feat-desc">Personalised wind-down sequences, delta-wave soundscapes, and morning wake protocols — so you wake up genuinely restored, not just rested.</p>
+        <a href="#" class="feat-arrow">Learn more <i data-lucide="arrow-right"></i></a>
+      </div>
+      <div class="feat-card reveal">
+        <div class="feat-icon-box"><i data-lucide="activity"></i></div>
+        <div class="feat-name">Mood Tracking</div>
+        <p class="feat-desc">Visual dashboards that reveal emotional patterns over days and weeks. Understand your triggers, energy cycles, and what genuinely moves the needle.</p>
+        <a href="#" class="feat-arrow">Learn more <i data-lucide="arrow-right"></i></a>
+      </div>
+      <div class="feat-card reveal">
+        <div class="feat-icon-box"><i data-lucide="brain"></i></div>
+        <div class="feat-name">CBT Toolkit</div>
+        <p class="feat-desc">50+ clinician-designed cognitive behavioural therapy exercises to challenge anxious loops, reframe catastrophic thinking, and build mental resilience.</p>
+        <a href="#" class="feat-arrow">Learn more <i data-lucide="arrow-right"></i></a>
+      </div>
+      <div class="feat-card reveal">
+        <div class="feat-icon-box"><i data-lucide="bell-ring"></i></div>
+        <div class="feat-name">Mindful Check-ins</div>
+        <p class="feat-desc">Not addictive pings — meaningful micro-moments. 60-second nervous system resets that slot into your day without disrupting your flow state.</p>
+        <a href="#" class="feat-arrow">Learn more <i data-lucide="arrow-right"></i></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- APP SHOWCASE -->
+<section class="showcase-sec" id="showcase">
+  <div class="showcase-inner">
+    <div class="showcase-imgs reveal-l">
+      <div class="si-main">
+        <img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=600&q=80&auto=format" alt="peaceful mountains" loading="lazy"/>
+      </div>
+      <div class="si-secondary">
+        <img src="https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=400&q=80&auto=format" alt="meditation yoga" loading="lazy"/>
+      </div>
+      <div class="si-stat-card">
+        <i data-lucide="flame"></i>
+        <span class="si-stat-val">14</span>
+        <span class="si-stat-lbl">Day Streak</span>
+      </div>
+    </div>
+    <div class="reveal-r">
+      <div class="sec-tag">The Experience</div>
+      <h2 class="sec-title">Built for <em>real people</em><br>with real stress</h2>
+      <p class="sec-body">Solace doesn't demand another hour of your day. It fits into the cracks — the commute, the lunch break, the sleepless 3am. Five minutes can genuinely change how you feel.</p>
+      <ul class="sc-list">
+        <li><i data-lucide="smartphone"></i>iOS + Android — offline mode included</li>
+        <li><i data-lucide="watch"></i>Apple Watch &amp; Wear OS companion app</li>
+        <li><i data-lucide="sliders"></i>Personalised daily plans that adapt as you grow</li>
+        <li><i data-lucide="moon"></i>Dark mode optimised for night-time use</li>
+        <li><i data-lucide="shield"></i>HIPAA-compliant — your data is yours, always</li>
+      </ul>
+      <div class="sc-cta">
+        <a href="#pricing" class="btn-primary"><i data-lucide="tag"></i>View Pricing</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="how-sec" id="how">
+  <div class="how-inner">
+    <div class="sec-tag reveal">Simple by design</div>
+    <h2 class="sec-title reveal">Calm in <em>four steps</em></h2>
+    <p class="sec-body reveal" style="max-width:440px">No overwhelming onboarding. No rigid routines. Just a gentle, personalised path to a calmer you — starting from minute one.</p>
+    <div class="steps-grid">
+      <div class="step reveal">
+        <div class="step-connector"></div>
+        <div class="step-num">01</div>
+        <div class="step-icon-box"><i data-lucide="clipboard-list"></i></div>
+        <div class="step-title">Take the 2-min quiz</div>
+        <p class="step-desc">Tell us how you're feeling. We build your personal wellness profile — no clinical forms, just honest questions about your life.</p>
+      </div>
+      <div class="step reveal">
+        <div class="step-connector"></div>
+        <div class="step-num">02</div>
+        <div class="step-icon-box"><i data-lucide="calendar-check"></i></div>
+        <div class="step-title">Get your daily plan</div>
+        <p class="step-desc">A tailored ritual of breath, journaling, and sleep sessions — designed around your schedule, goals, and current stress level.</p>
+      </div>
+      <div class="step reveal">
+        <div class="step-connector"></div>
+        <div class="step-num">03</div>
+        <div class="step-icon-box"><i data-lucide="leaf"></i></div>
+        <div class="step-title">Practice daily</div>
+        <p class="step-desc">5–15 minutes a day is all it takes. Sessions adapt as your mood evolves — always meeting you exactly where you are.</p>
+      </div>
+      <div class="step reveal">
+        <div class="step-num">04</div>
+        <div class="step-icon-box"><i data-lucide="trending-up"></i></div>
+        <div class="step-title">Watch yourself grow</div>
+        <p class="step-desc">Monthly insights show you exactly how far you've come — in sleep quality, stress levels, mood trends, and focus capacity.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- QUOTE -->
+<section class="quote-sec">
+  <div class="quote-bg-word" id="qWord">stillness</div>
+  <div style="max-width:900px;margin:0 auto;position:relative;z-index:2">
+    <span class="quote-mark reveal">"</span>
+    <blockquote class="quote-text reveal">
+      You can't calm the storm, so stop trying. What you <span class="hl">can</span> do is calm yourself — and the storm will pass.
+    </blockquote>
+    <p class="quote-attr reveal">Timber Hawkeye</p>
+  </div>
+</section>
+
+<!-- PANELS -->
+<section class="panels-sec">
+  <div class="panels-inner">
+
+    <!-- Breathwork -->
+    <div class="panel">
+      <div class="pv reveal-l">
+        <div class="pv-inner bw-bg">
+          <div class="bw-rings">
+            <div class="bw-ring r5"></div>
+            <div class="bw-ring r4"></div>
+            <div class="bw-ring r3"></div>
+            <div class="bw-ring r2"></div>
+            <div class="bw-ring r1"></div>
+            <div class="bw-center"></div>
+          </div>
+          <div class="bw-bottom">
+            <div class="bw-phase-text" id="bwPhase">Inhale... 4 counts</div>
+            <div class="bw-bottom-lbl"><i data-lucide="wind"></i>Box Breathing · 4-4-4-4</div>
+          </div>
+        </div>
+      </div>
+      <div class="reveal-r">
+        <div class="pc-tag">01 — Breathwork</div>
+        <h3 class="pc-title">Calm your nervous system<br><em>in under 3 minutes</em></h3>
+        <p class="pc-body">Your breath is the fastest bridge between your mind and body. Solace's guided sessions activate the parasympathetic nervous system — flipping the switch from fight-or-flight to rest-and-digest, anytime.</p>
+        <ul class="pc-list">
+          <li><i data-lucide="check-circle"></i>Box breathing: reduce acute stress and anxiety spikes instantly</li>
+          <li><i data-lucide="check-circle"></i>4-7-8 method: clinically proven for falling asleep faster</li>
+          <li><i data-lucide="check-circle"></i>Coherence breathing: improve heart rate variability and emotional regulation</li>
+          <li><i data-lucide="check-circle"></i>Wim Hof: boost energy, immune function, and morning mood</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Journal -->
+    <div class="panel rev">
+      <div class="pv reveal-r">
+        <div class="pv-inner jv-bg" style="direction:ltr">
+          <div class="jv-top">
+            <div class="jv-date"><i data-lucide="calendar"></i>Wednesday, Apr 19</div>
+            <div class="jv-mood-row">
+              <div class="jv-dot" style="background:#1ed8b4"></div>
+              <div class="jv-dot" style="background:#c4a7ff"></div>
+              <div class="jv-dot" style="background:#1ed8b4"></div>
+            </div>
+          </div>
+          <div class="jv-title">How are you feeling right now?</div>
+          <div class="jv-divider"></div>
+          <div class="jv-body">"Today was heavy — meetings back to back, no space to breathe. But I noticed something — every time I felt overwhelmed, I caught it sooner. That feels like real growth. I'm proud of that.<span class="jv-cursor"></span>"</div>
+          <div class="jv-ai">
+            <div class="jv-ai-header"><i data-lucide="sparkles" style="width:11px;height:11px;color:var(--jade)"></i><div class="jv-ai-lbl">AI Insight</div></div>
+            <div class="jv-ai-text">You've mentioned "overwhelm" 6 times this week. Let's gently explore what's underneath that pattern...</div>
+          </div>
+        </div>
+      </div>
+      <div class="reveal-l" style="direction:ltr">
+        <div class="pc-tag">02 — AI Journaling</div>
+        <h3 class="pc-title">Words that <em>heal</em><br>and reveal</h3>
+        <p class="pc-body">Solace's journaling is unlike anything else. An empathetic AI surfaces the patterns you can't see yourself — guiding you toward self-understanding with compassion, not cold data.</p>
+        <ul class="pc-list">
+          <li><i data-lucide="check-circle"></i>Daily prompts personalised to your mood and recent entries</li>
+          <li><i data-lucide="check-circle"></i>AI detects emotional themes across weeks and months</li>
+          <li><i data-lucide="check-circle"></i>Gratitude journaling with long-term wellbeing scoring</li>
+          <li><i data-lucide="check-circle"></i>Completely private — your entries never train any model</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Sleep -->
+    <div class="panel">
+      <div class="pv reveal-l">
+        <div class="pv-inner sv-bg">
+          <div class="sv-hd">
+            <div class="sv-lbl"><i data-lucide="moon"></i>Last night's sleep</div>
+            <div class="sv-good"><i data-lucide="arrow-up"></i>+14% better</div>
+          </div>
+          <div class="sv-big">7<sub>h 42m</sub></div>
+          <div class="sv-bars">
+            <div class="sv-bar" style="height:35%;background:rgba(196,167,255,.22)"></div>
+            <div class="sv-bar" style="height:80%;background:rgba(30,216,180,.5)"></div>
+            <div class="sv-bar" style="height:92%;background:rgba(30,216,180,.7)"></div>
+            <div class="sv-bar" style="height:65%;background:rgba(30,216,180,.42)"></div>
+            <div class="sv-bar" style="height:95%;background:rgba(30,216,180,.8)"></div>
+            <div class="sv-bar" style="height:55%;background:rgba(30,216,180,.38)"></div>
+            <div class="sv-bar" style="height:78%;background:rgba(30,216,180,.58)"></div>
+            <div class="sv-bar" style="height:40%;background:rgba(196,167,255,.2)"></div>
+          </div>
+          <div class="sv-leg-row">
+            <div class="sv-leg"><i data-lucide="circle" style="fill:rgba(30,216,180,.7);color:transparent"></i>Deep</div>
+            <div class="sv-leg"><i data-lucide="circle" style="fill:var(--amethyst);color:transparent"></i>REM</div>
+            <div class="sv-leg"><i data-lucide="circle" style="fill:rgba(255,255,255,.12);color:transparent"></i>Light</div>
+          </div>
+          <div class="sv-scores">
+            <div class="sv-sc"><span class="sv-sc-val">82</span><span class="sv-sc-lbl">Sleep Score</span></div>
+            <div class="sv-sc"><span class="sv-sc-val">2.1h</span><span class="sv-sc-lbl">Deep Sleep</span></div>
+            <div class="sv-sc"><span class="sv-sc-val">98%</span><span class="sv-sc-lbl">Efficiency</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="reveal-r">
+        <div class="pc-tag">03 — Sleep Science</div>
+        <h3 class="pc-title">Rest that actually <em>restores you</em></h3>
+        <p class="pc-body">Sleep is the foundation of mental health — yet most of us run on a chronic deficit. Solace builds personalised sleep architecture: wind-down rituals, soundscapes, and morning insights that compound over time.</p>
+        <ul class="pc-list">
+          <li><i data-lucide="check-circle"></i>Sleep score algorithm built with sleep medicine researchers</li>
+          <li><i data-lucide="check-circle"></i>Personalised wind-down routine (15–45 min, customisable)</li>
+          <li><i data-lucide="check-circle"></i>Delta-wave, pink noise, and binaural beat soundscapes</li>
+          <li><i data-lucide="check-circle"></i>Progressive muscle relaxation for restless nights</li>
+        </ul>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="testi-sec" id="stories">
+  <div class="testi-inner">
+    <div class="sec-tag reveal">Real stories</div>
+    <h2 class="sec-title reveal">Lives <em>gently</em> transformed</h2>
+    <div class="testi-grid">
+      <div class="tcard reveal">
+        <div class="tcard-stars">
+          <i data-lucide="star"></i><i data-lucide="star"></i><i data-lucide="star"></i><i data-lucide="star"></i><i data-lucide="star"></i>
+        </div>
+        <p class="tcard-text">"I've tried Headspace, Calm, Waking Up. Solace is the only one that felt like it actually understood me. The AI journaling is genuinely unlike anything I've experienced."</p>
+        <div class="tcard-author">
+          <div class="tcard-avatar"><img src="https://i.pravatar.cc/80?img=47" alt="Aanya"/></div>
+          <div class="tcard-name"><strong>Aanya Mehta</strong><span>UX Designer · Bangalore</span></div>
+        </div>
+      </div>
+      <div class="tcard reveal">
+        <div class="tcard-stars">
+          <i data-lucide="star"></i><i data-lucide="star"></i><i data-lucide="star"></i><i data-lucide="star"></i><i data-lucide="star"></i>
+        </div>
+        <p class="tcard-text">"Panic attacks were ruining my life. Three weeks of the breathwork program and I've gone from daily attacks to one this whole month. I'm genuinely emotional writing this."</p>
+        <div class="tcard-author">
+          <div class="tcard-avatar"><img src="https://i.pravatar.cc/80?img=12" alt="James"/></div>
+          <div class="tcard-name"><strong>James Okonkwo</strong><span>Software Engineer · Lagos</span></div>
+        </div>
+      </div>
+      <div class="tcard reveal">
+        <div class="tcard-stars">
+          <i data-lucide="star"></i><i data-lucide="star"></i><i data-lucide="star"></i><i data-lucide="star"></i><i data-lucide="star"></i>
+        </div>
+        <p class="tcard-text">"The sleep rituals are everything. I used to lie awake for hours doom-scrolling. Now I'm asleep in 12 minutes. My therapist noticed the difference before I even told her."</p>
+        <div class="tcard-author">
+          <div class="tcard-avatar"><img src="https://i.pravatar.cc/80?img=35" alt="Priya"/></div>
+          <div class="tcard-name"><strong>Priya Nair</strong><span>Teacher · Chennai</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section class="pricing-sec" id="pricing">
+  <div class="pricing-inner">
+    <div class="sec-tag reveal">Invest in your peace</div>
+    <h2 class="sec-title reveal">Simple, <em>honest</em> pricing</h2>
+    <p class="sec-body reveal" style="max-width:400px">Less than a coffee a week. No dark patterns. No guilt trips. Cancel anytime with zero friction.</p>
+    <div class="price-grid">
+      <div class="price-card reveal">
+        <div class="price-plan"><i data-lucide="gift"></i>Free</div>
+        <div class="price-amount">$0<span>/mo</span></div>
+        <p class="price-desc">Everything you need to begin your wellness journey — no credit card required, ever.</p>
+        <div class="price-divider"></div>
+        <ul class="price-feats">
+          <li><i data-lucide="check"></i>5 breathwork sessions/month</li>
+          <li><i data-lucide="check"></i>Daily mood check-in</li>
+          <li><i data-lucide="check"></i>3 journal entries/week</li>
+          <li><i data-lucide="check"></i>Basic sleep tracking</li>
+          <li class="dim"><i data-lucide="minus"></i>AI journaling insights</li>
+          <li class="dim"><i data-lucide="minus"></i>Unlimited sessions</li>
+        </ul>
+        <a href="#" class="price-btn outline"><i data-lucide="arrow-right"></i>Get Started Free</a>
+      </div>
+      <div class="price-card featured reveal">
+        <div class="price-badge"><i data-lucide="zap"></i>Most Popular</div>
+        <div class="price-plan"><i data-lucide="crown"></i>Premium</div>
+        <div class="price-amount"><sup>$</sup>9<span>/mo</span></div>
+        <p class="price-desc">The full Solace experience for building a deep, lasting calm practice.</p>
+        <div class="price-divider"></div>
+        <ul class="price-feats">
+          <li><i data-lucide="check"></i>Unlimited breathwork sessions</li>
+          <li><i data-lucide="check"></i>AI-powered journaling insights</li>
+          <li><i data-lucide="check"></i>Advanced sleep analysis</li>
+          <li><i data-lucide="check"></i>Full CBT toolkit (50+ exercises)</li>
+          <li><i data-lucide="check"></i>Mood pattern reports</li>
+          <li><i data-lucide="check"></i>Offline mode + Apple Watch</li>
+        </ul>
+        <a href="#" class="price-btn filled"><i data-lucide="play-circle"></i>Start 14-Day Free Trial</a>
+      </div>
+      <div class="price-card reveal">
+        <div class="price-plan"><i data-lucide="infinity"></i>Lifetime</div>
+        <div class="price-amount"><sup>$</sup>149</div>
+        <p class="price-desc">Pay once, own it forever. For people truly serious about their mental wellness.</p>
+        <div class="price-divider"></div>
+        <ul class="price-feats">
+          <li><i data-lucide="check"></i>Everything in Premium</li>
+          <li><i data-lucide="check"></i>All future features included</li>
+          <li><i data-lucide="check"></i>Family sharing (up to 5)</li>
+          <li><i data-lucide="check"></i>VIP community access</li>
+          <li><i data-lucide="check"></i>Quarterly wellness check-in calls</li>
+          <li><i data-lucide="check"></i>Lifetime updates, guaranteed</li>
+        </ul>
+        <a href="#" class="price-btn outline"><i data-lucide="arrow-right"></i>Get Lifetime Access</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-sec">
+  <div class="cta-orb cta-orb-1"></div>
+  <div class="cta-orb cta-orb-2"></div>
+  <div style="position:relative;z-index:2;max-width:800px;margin:0 auto">
+    <div class="cta-eyebrow reveal"><i data-lucide="sparkles"></i>Begin your journey</div>
+    <h2 class="cta-title reveal">Your calmer self<br>is <em>already here.</em></h2>
+    <p class="cta-sub reveal">Start free — no credit card. Cancel whenever. Your peace is worth it.</p>
+    <div class="cta-btns reveal">
+      <a href="#" class="btn-primary"><i data-lucide="download"></i>Download Solace — Free</a>
+      <a href="#features" class="btn-ghost"><i data-lucide="sparkles"></i>See All Features</a>
+    </div>
+    <div class="stores reveal">
+      <a href="#" class="store-btn"><i data-lucide="apple"></i>App Store</a>
+      <a href="#" class="store-btn"><i data-lucide="smartphone"></i>Google Play</a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-top">
+    <div class="footer-brand">
+      <a href="#" class="logo"><span class="logo-dot"></span>Sol<em style="font-style:italic;color:var(--jade)">a</em>ce</a>
+      <p>A sanctuary for your mind. Built by clinicians, designers, and people who needed this app themselves.</p>
+      <div class="footer-social">
+        <a href="#" aria-label="Twitter"><i data-lucide="twitter"></i></a>
+        <a href="#" aria-label="Instagram"><i data-lucide="instagram"></i></a>
+        <a href="#" aria-label="LinkedIn"><i data-lucide="linkedin"></i></a>
+        <a href="#" aria-label="YouTube"><i data-lucide="youtube"></i></a>
+      </div>
+    </div>
+    <div class="footer-cols">
+      <div class="footer-col">
+        <h4><i data-lucide="layers"></i>Product</h4>
+        <ul>
+          <li><a href="#"><i data-lucide="chevron-right"></i>Features</a></li>
+          <li><a href="#"><i data-lucide="chevron-right"></i>Pricing</a></li>
+          <li><a href="#"><i data-lucide="chevron-right"></i>Download</a></li>
+          <li><a href="#"><i data-lucide="chevron-right"></i>Changelog</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4><i data-lucide="building"></i>Company</h4>
+        <ul>
+          <li><a href="#"><i data-lucide="chevron-right"></i>About</a></li>
+          <li><a href="#"><i data-lucide="chevron-right"></i>Blog</a></li>
+          <li><a href="#"><i data-lucide="chevron-right"></i>Careers</a></li>
+          <li><a href="#"><i data-lucide="chevron-right"></i>Press</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4><i data-lucide="life-buoy"></i>Support</h4>
+        <ul>
+          <li><a href="#"><i data-lucide="chevron-right"></i>Help Centre</a></li>
+          <li><a href="#"><i data-lucide="chevron-right"></i>Privacy</a></li>
+          <li><a href="#"><i data-lucide="chevron-right"></i>Terms</a></li>
+          <li><a href="#"><i data-lucide="chevron-right"></i>Contact</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p class="footer-copy"><i data-lucide="heart"></i>© 2025 Solace Inc. All rights reserved.</p>
+    <div class="footer-links">
+      <a href="#">Privacy</a>
+      <a href="#">Terms</a>
+      <a href="#">Cookies</a>
+    </div>
+  </div>
+</footer>
+
+<!-- ══════════════════
+     SCRIPTS
+══════════════════ -->
+<script>
+/* Init Lucide icons */
+lucide.createIcons();
+
+/* ── PARTICLE CANVAS ── */
+(function(){
+  const canvas=document.getElementById('pCanvas');
+  const ctx=canvas.getContext('2d');
+  let W,H,particles=[];
+  function resize(){W=canvas.width=window.innerWidth;H=canvas.height=window.innerHeight;}
+  resize();window.addEventListener('resize',resize);
+  function mkP(){
+    return{x:Math.random()*W,y:Math.random()*H,r:Math.random()*1.6+.3,
+      vx:(Math.random()-.5)*.28,vy:(Math.random()-.5)*.28,
+      a:Math.random(),da:(Math.random()*.005+.002)*(Math.random()<.5?1:-1),
+      teal:Math.random()<.62};
+  }
+  for(let i=0;i<140;i++)particles.push(mkP());
+  let mx=W/2,my=H/2;
+  document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY});
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    particles.forEach(p=>{
+      p.x+=p.vx;p.y+=p.vy;p.a+=p.da;
+      if(p.a<=0||p.a>=1)p.da*=-1;
+      if(p.x<0||p.x>W)p.vx*=-1;
+      if(p.y<0||p.y>H)p.vy*=-1;
+      const dx=p.x-mx,dy=p.y-my,d=Math.sqrt(dx*dx+dy*dy);
+      if(d<90){p.vx+=(dx/d)*.035;p.vy+=(dy/d)*.035;}
+      ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+      ctx.fillStyle=p.teal?`rgba(30,216,180,${p.a*.5})`:`rgba(196,167,255,${p.a*.28})`;
+      ctx.fill();
+    });
+    for(let i=0;i<particles.length;i++)for(let j=i+1;j<particles.length;j++){
+      const a=particles[i],b=particles[j];
+      const dx=a.x-b.x,dy=a.y-b.y,d=Math.sqrt(dx*dx+dy*dy);
+      if(d<100){
+        ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);
+        ctx.strokeStyle=`rgba(30,216,180,${(1-d/100)*.05})`;ctx.lineWidth=.5;ctx.stroke();
+      }
+    }
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+/* ── CURSOR ── */
+const cur=document.getElementById('cur'),curR=document.getElementById('cur-r');
+let cx=0,cy=0,rx=0,ry=0;
+if(window.matchMedia('(hover:hover)').matches){
+  document.addEventListener('mousemove',e=>{cx=e.clientX;cy=e.clientY;cur.style.left=cx+'px';cur.style.top=cy+'px';});
+  setInterval(()=>{rx+=(cx-rx)*.11;ry+=(cy-ry)*.11;curR.style.left=rx+'px';curR.style.top=ry+'px';},16);
+  document.querySelectorAll('a,button').forEach(el=>{
+    el.addEventListener('mouseenter',()=>{curR.style.width='46px';curR.style.height='46px';curR.style.borderColor='rgba(30,216,180,.6)'});
+    el.addEventListener('mouseleave',()=>{curR.style.width='28px';curR.style.height='28px';curR.style.borderColor='rgba(30,216,180,.45)'});
+  });
+}
+
+/* ── NAV ── */
+window.addEventListener('scroll',()=>document.getElementById('nav').classList.toggle('scrolled',window.scrollY>60));
+document.getElementById('hamburger').addEventListener('click',()=>document.getElementById('mobileMenu').classList.add('open'));
+document.getElementById('mobileClose').addEventListener('click',closeMobile);
+function closeMobile(){document.getElementById('mobileMenu').classList.remove('open');}
+
+/* ── GSAP ── */
+gsap.registerPlugin(ScrollTrigger);
+
+const htl=gsap.timeline({delay:.2});
+htl.to('#hBadge',{opacity:1,y:0,duration:.85,ease:'power3.out'})
+   .to('#hTitle',{opacity:1,y:0,duration:1,ease:'power3.out'},'-=.5')
+   .to('#hSub',{opacity:1,y:0,duration:.9,ease:'power3.out'},'-=.6')
+   .to('#hCtas',{opacity:1,y:0,duration:.8,ease:'power3.out'},'-=.55')
+   .to('#hStats',{opacity:1,y:0,duration:.75,ease:'power3.out'},'-=.5')
+   .to('#phoneWrap',{opacity:1,y:0,duration:1.1,ease:'power3.out'},'-=.9');
+
+gsap.to('#phoneWrap',{y:-16,duration:3.8,ease:'sine.inOut',repeat:-1,yoyo:true});
+gsap.to('.fp1',{y:-10,duration:3,ease:'sine.inOut',repeat:-1,yoyo:true,delay:.5});
+gsap.to('.fp2',{y:10,duration:3.4,ease:'sine.inOut',repeat:-1,yoyo:true,delay:1.1});
+gsap.to('#qWord',{x:'-18%',ease:'none',scrollTrigger:{trigger:'.quote-sec',start:'top bottom',end:'bottom top',scrub:2}});
+
+document.querySelectorAll('.pv-inner').forEach(el=>{
+  gsap.fromTo(el,{y:'0%'},{y:'-12%',ease:'none',scrollTrigger:{trigger:el,start:'top bottom',end:'bottom top',scrub:1.3}});
+});
+
+gsap.utils.toArray('.reveal').forEach(el=>{
+  gsap.to(el,{opacity:1,y:0,duration:.9,ease:'power3.out',scrollTrigger:{trigger:el,start:'top 92%',toggleActions:'play none none none'}});
+});
+gsap.utils.toArray('.reveal-l').forEach(el=>{
+  gsap.to(el,{opacity:1,x:0,duration:1.05,ease:'power3.out',scrollTrigger:{trigger:el,start:'top 90%',toggleActions:'play none none none'}});
+});
+gsap.utils.toArray('.reveal-r').forEach(el=>{
+  gsap.to(el,{opacity:1,x:0,duration:1.05,ease:'power3.out',scrollTrigger:{trigger:el,start:'top 90%',toggleActions:'play none none none'}});
+});
+
+/* ── BREATHWORK PHASE ── */
+const phases=['Inhale... 4 counts','Hold... 4 counts','Exhale... 4 counts','Hold... 4 counts'];
+const phaseEl=document.getElementById('bwPhase');
+let phaseIdx=0;
+setInterval(()=>{
+  phaseIdx=(phaseIdx+1)%4;
+  if(phaseEl){phaseEl.style.opacity=0;setTimeout(()=>{phaseEl.textContent=phases[phaseIdx];phaseEl.style.opacity=1;phaseEl.style.transition='opacity .5s';},300);}
+},4000);
+
+/* ── COUNTER ANIMATION ── */
+function animateCounters(){
+  document.querySelectorAll('.stat-val').forEach(el=>{
+    const html=el.innerHTML,match=html.match(/[\d.]+/);
+    if(!match)return;
+    const target=parseFloat(match[0]),suffix=html.replace(match[0],'');
+    let s=0;const inc=target/100;
+    const t=setInterval(()=>{s=Math.min(s+inc,target);el.innerHTML=(Number.isInteger(target)?Math.round(s):s.toFixed(1))+suffix;if(s>=target)clearInterval(t);},18);
+  });
+}
+ScrollTrigger.create({trigger:'.stats-strip',start:'top 80%',once:true,onEnter:animateCounters});
+</script>
+</body>
+</html>
